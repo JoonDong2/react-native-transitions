@@ -45,14 +45,14 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/joondong/react-native-transitions.git"
+    "url": "git+https://github.com/JoonDong2/react-native-transitions.git"
   },
   "author": "Joondong <noreply@example.com> (https://github.com/joondong)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/joondong/react-native-transitions/issues"
+    "url": "https://github.com/JoonDong2/react-native-transitions/issues"
   },
-  "homepage": "https://github.com/joondong/react-native-transitions#readme",
+  "homepage": "https://github.com/JoonDong2/react-native-transitions#readme",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
