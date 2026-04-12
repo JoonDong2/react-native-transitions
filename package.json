@@ -70,14 +70,18 @@
     "eslint-plugin-prettier": "^5.5.5",
     "prettier": "^3.8.1",
     "react": "19.1.0",
+    "react-freeze": "^1.0.4",
     "react-native": "0.81.5",
     "react-native-builder-bob": "^0.41.0",
+    "react-native-screens": "^4.24.0",
     "turbo": "^2.8.21",
     "typescript": "^6.0.2"
   },
   "peerDependencies": {
     "react": "*",
-    "react-native": "*"
+    "react-freeze": "*",
+    "react-native": "*",
+    "react-native-screens": "*"
   },
   "workspaces": [
     "example"
