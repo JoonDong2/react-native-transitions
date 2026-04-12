@@ -2285,6 +2285,37 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@joondong2/react-native-transitions@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "@joondong2/react-native-transitions@workspace:."
+  dependencies:
+    "@eslint/compat": "npm:^2.0.3"
+    "@eslint/eslintrc": "npm:^3.3.5"
+    "@eslint/js": "npm:^10.0.1"
+    "@react-native/babel-preset": "npm:0.85.0"
+    "@react-native/eslint-config": "npm:0.85.0"
+    "@types/react": "npm:^19.2.0"
+    del-cli: "npm:^7.0.0"
+    eslint: "npm:^9.39.4"
+    eslint-config-prettier: "npm:^10.1.8"
+    eslint-plugin-ft-flow: "npm:^3.0.11"
+    eslint-plugin-prettier: "npm:^5.5.5"
+    prettier: "npm:^3.8.1"
+    react: "npm:19.1.0"
+    react-freeze: "npm:^1.0.4"
+    react-native: "npm:0.81.5"
+    react-native-builder-bob: "npm:^0.41.0"
+    react-native-screens: "npm:^4.24.0"
+    turbo: "npm:^2.8.21"
+    typescript: "npm:^6.0.2"
+  peerDependencies:
+    react: "*"
+    react-freeze: "*"
+    react-native: "*"
+    react-native-screens: "*"
+  languageName: unknown
+  linkType: soft
+
 "@jridgewell/gen-mapping@npm:^0.3.12, @jridgewell/gen-mapping@npm:^0.3.2, @jridgewell/gen-mapping@npm:^0.3.5":
   version: 0.3.13
   resolution: "@jridgewell/gen-mapping@npm:0.3.13"
@@ -8391,37 +8422,6 @@ __metadata:
     react-native-monorepo-config: "npm:^0.3.3"
     react-native-screens: "npm:~4.11.1"
     react-native-web: "npm:~0.21.0"
-  languageName: unknown
-  linkType: soft
-
-"react-native-transitions@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "react-native-transitions@workspace:."
-  dependencies:
-    "@eslint/compat": "npm:^2.0.3"
-    "@eslint/eslintrc": "npm:^3.3.5"
-    "@eslint/js": "npm:^10.0.1"
-    "@react-native/babel-preset": "npm:0.85.0"
-    "@react-native/eslint-config": "npm:0.85.0"
-    "@types/react": "npm:^19.2.0"
-    del-cli: "npm:^7.0.0"
-    eslint: "npm:^9.39.4"
-    eslint-config-prettier: "npm:^10.1.8"
-    eslint-plugin-ft-flow: "npm:^3.0.11"
-    eslint-plugin-prettier: "npm:^5.5.5"
-    prettier: "npm:^3.8.1"
-    react: "npm:19.1.0"
-    react-freeze: "npm:^1.0.4"
-    react-native: "npm:0.81.5"
-    react-native-builder-bob: "npm:^0.41.0"
-    react-native-screens: "npm:^4.24.0"
-    turbo: "npm:^2.8.21"
-    typescript: "npm:^6.0.2"
-  peerDependencies:
-    react: "*"
-    react-freeze: "*"
-    react-native: "*"
-    react-native-screens: "*"
   languageName: unknown
   linkType: soft
 
