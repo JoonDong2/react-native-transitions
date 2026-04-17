@@ -1,9 +1,5 @@
 import { Component } from 'react';
-import {
-  Animated,
-  PanResponder,
-  View,
-} from 'react-native';
+import { Animated, PanResponder, View } from 'react-native';
 import type { LayoutChangeEvent, PanResponderInstance } from 'react-native';
 import { ScreenContainer } from 'react-native-screens';
 import { AnimatedItem } from './AnimatedItem';
@@ -66,8 +62,8 @@ class Transitions extends Component<TransitionsProps, TransitionsState> {
         const dy = Math.abs(gestureState.dy);
 
         const isValidSwipe = this.props.vertical
-            ? dy > dx && absDelta > 10
-            : dx > dy && absDelta > 10;
+          ? dy > dx && absDelta > 10
+          : dx > dy && absDelta > 10;
 
         if (!isValidSwipe) return false;
 
@@ -113,7 +109,10 @@ class Transitions extends Component<TransitionsProps, TransitionsState> {
         const newProgress = currentIdx + offset;
         const childCount = this.props.children.length;
 
-        const clampedValue = Math.max(-0.2, Math.min(childCount - 1 + 0.2, newProgress));
+        const clampedValue = Math.max(
+          -0.2,
+          Math.min(childCount - 1 + 0.2, newProgress)
+        );
 
         this.getAnimatedIndex().setValue(clampedValue);
 
@@ -154,7 +153,9 @@ class Transitions extends Component<TransitionsProps, TransitionsState> {
         }
 
         const delta = this.props.vertical ? gestureState.dy : gestureState.dx;
-        const velocityValue = this.props.vertical ? gestureState.vy : gestureState.vx;
+        const velocityValue = this.props.vertical
+          ? gestureState.vy
+          : gestureState.vx;
 
         const offset = -delta / containerSize;
         const velocity = -velocityValue;
@@ -164,51 +165,63 @@ class Transitions extends Component<TransitionsProps, TransitionsState> {
         const canGoNext = currentIdx < childCount - 1;
         const canGoPrev = currentIdx > 0;
 
-        if (canGoNext && (velocity > VELOCITY_THRESHOLD || offset > SWIPE_THRESHOLD)) {
+        if (
+          canGoNext &&
+          (velocity > VELOCITY_THRESHOLD || offset > SWIPE_THRESHOLD)
+        ) {
           targetIdx = currentIdx + 1;
-        } else if (canGoPrev && (velocity < -VELOCITY_THRESHOLD || offset < -SWIPE_THRESHOLD)) {
+        } else if (
+          canGoPrev &&
+          (velocity < -VELOCITY_THRESHOLD || offset < -SWIPE_THRESHOLD)
+        ) {
           targetIdx = currentIdx - 1;
         }
 
         this.currentIndex = targetIdx;
 
-        this.setState({
-          transitionTarget: targetIdx,
-          swipingToIndex: null,
-        }, () => {
-           if (targetIdx !== currentIdx) {
-            this.ensureMounted(targetIdx);
-            this.props.onIndexChange?.(targetIdx);
+        this.setState(
+          {
+            transitionTarget: targetIdx,
+            swipingToIndex: null,
+          },
+          () => {
+            if (targetIdx !== currentIdx) {
+              this.ensureMounted(targetIdx);
+              this.props.onIndexChange?.(targetIdx);
+            }
+            // Pass current (previous) index as fromIndex to track departing screen
+            this.runAnimation(targetIdx, Math.abs(velocity), currentIdx);
           }
-          // Pass current (previous) index as fromIndex to track departing screen
-          this.runAnimation(targetIdx, Math.abs(velocity), currentIdx);
-        });
+        );
       },
 
       onPanResponderTerminate: () => {
         const currentIdx = this.currentIndex;
-        this.setState({
-          transitionTarget: currentIdx,
-          swipingToIndex: null,
-        }, () => {
-          this.runAnimation(currentIdx);
-        });
+        this.setState(
+          {
+            transitionTarget: currentIdx,
+            swipingToIndex: null,
+          },
+          () => {
+            this.runAnimation(currentIdx);
+          }
+        );
       },
     });
   }
 
   getAnimatedIndex = (): Animated.Value => {
     return this.props.animatedIndex ?? this.internalAnimatedIndex;
-  }
+  };
 
   getCurrentContainerSize = (): number => {
     const { vertical, layout: layoutProps } = this.props;
     const { layout } = this.state;
     if (vertical) {
-        return layoutProps?.height ?? layout.height;
+      return layoutProps?.height ?? layout.height;
     }
     return layoutProps?.width ?? layout.width;
-  }
+  };
 
   componentWillUnmount() {
     this.isUnmounted = true;
@@ -237,7 +250,6 @@ class Transitions extends Component<TransitionsProps, TransitionsState> {
 
     // When the external index prop changes
     if (prevIndex !== nextIndex) {
-
       // Resolve race condition during swipe:
       // If we've already reached nextIndex internally (e.g. via swipe),
       // skip the forced navigation from the prop update
@@ -293,7 +305,6 @@ class Transitions extends Component<TransitionsProps, TransitionsState> {
         // 4. Run animation (virtualStartIndex -> nextIndex)
         // Visually appears as a single-step transition
         this.animateToIndex(nextIndex, true, prevIndex);
-
       } else {
         // Standard adjacent transition (e.g. 0 -> 1)
         this.resetAllOffsets();
@@ -317,7 +328,7 @@ class Transitions extends Component<TransitionsProps, TransitionsState> {
   // --- 1. Mount Logic (Add Only) ---
   // This function only adds indices and never removes them.
   ensureMounted = (idx: number) => {
-    this.setState(prevState => {
+    this.setState((prevState) => {
       // [Modified] During animation, preserve order by not re-inserting existing indices
       // (skipping delete -> add reordering)
       if (prevState.mountedIndices.has(idx)) {
@@ -328,7 +339,7 @@ class Transitions extends Component<TransitionsProps, TransitionsState> {
       newSet.add(idx);
       return { mountedIndices: newSet };
     });
-  }
+  };
 
   // --- 2. Prune Logic (Remove & Reorder) ---
   // This function handles removal and reordering after animation completes.
@@ -336,59 +347,71 @@ class Transitions extends Component<TransitionsProps, TransitionsState> {
     const isInfiniteKeepAlive = this.props.keepAlive === undefined;
     const keepAliveLimit = this.props.keepAlive ?? Number.MAX_SAFE_INTEGER;
 
-    this.setState(prevState => {
-      const newSet = new Set(prevState.mountedIndices);
+    let nextKeptSet: Set<number> | null = null;
 
-      // Animation complete: move target to end of Set
-      // to mark it as the newest (lowest priority / active)
-      if (newSet.has(targetIndex)) {
-        newSet.delete(targetIndex);
-      }
-      newSet.add(targetIndex);
+    this.setState(
+      (prevState) => {
+        const newSet = new Set(prevState.mountedIndices);
 
-      if (isInfiniteKeepAlive) return { mountedIndices: newSet };
-      if (newSet.size <= keepAliveLimit) return { mountedIndices: newSet };
-
-      // FIFO eviction: keep the newest entries (from the end)
-      const toKeep = Array.from(newSet).slice(newSet.size - keepAliveLimit);
-
-      // [Safety] Force-add targetIndex if missing
-      if (!toKeep.includes(targetIndex)) {
-        toKeep.push(targetIndex);
-      }
-
-      // Clean up offset memory
-      const keptSet = new Set(toKeep);
-      Object.keys(this.itemOffsets).forEach(key => {
-        const k = Number(key);
-        if (!keptSet.has(k)) {
-          delete this.itemOffsets[k];
+        // Animation complete: move target to end of Set
+        // to mark it as the newest (lowest priority / active)
+        if (newSet.has(targetIndex)) {
+          newSet.delete(targetIndex);
         }
-      });
+        newSet.add(targetIndex);
 
-      return { mountedIndices: new Set(toKeep) };
-    });
-  }
+        if (isInfiniteKeepAlive) return { mountedIndices: newSet };
+        if (newSet.size <= keepAliveLimit) return { mountedIndices: newSet };
+
+        // FIFO eviction: keep the newest entries (from the end)
+        const toKeep = Array.from(newSet).slice(newSet.size - keepAliveLimit);
+
+        // [Safety] Force-add targetIndex if missing
+        if (!toKeep.includes(targetIndex)) {
+          toKeep.push(targetIndex);
+        }
+
+        const keptSet = new Set(toKeep);
+        nextKeptSet = keptSet;
+        return { mountedIndices: keptSet };
+      },
+      () => {
+        // Side effects run after commit (safe under strict mode double-invocation)
+        if (!nextKeptSet) return;
+        Object.keys(this.itemOffsets).forEach((key) => {
+          const k = Number(key);
+          if (!nextKeptSet!.has(k)) {
+            delete this.itemOffsets[k];
+          }
+        });
+      }
+    );
+  };
 
   getItemOffset = (idx: number) => {
     if (!this.itemOffsets[idx]) {
       this.itemOffsets[idx] = new Animated.Value(0);
     }
     return this.itemOffsets[idx];
-  }
+  };
 
   resetAllOffsets = () => {
-    Object.values(this.itemOffsets).forEach(offset => offset.setValue(0));
-  }
+    Object.values(this.itemOffsets).forEach((offset) => offset.setValue(0));
+  };
 
   // --- Animation Logic ---
-  runAnimation = (targetIndex: number, velocity?: number, fromIndex?: number) => {
+  runAnimation = (
+    targetIndex: number,
+    velocity?: number,
+    fromIndex?: number
+  ) => {
     if (this.animationInstance) {
       this.animationInstance.stop();
     }
 
     // Record the departing index (use fromIndex if provided, otherwise activeIndex)
-    const departing = fromIndex !== undefined ? fromIndex : this.state.activeIndex;
+    const departing =
+      fromIndex !== undefined ? fromIndex : this.state.activeIndex;
     if (departing !== targetIndex) {
       this.setState({ departingIndex: departing });
     }
@@ -409,66 +432,87 @@ class Transitions extends Component<TransitionsProps, TransitionsState> {
       if (finished && !this.isUnmounted && targetIndex === this.currentIndex) {
         this.resetAllOffsets();
         this.setState({
-            transitionTarget: null,
-            activeIndex: targetIndex,
-            isAnimating: false,
+          transitionTarget: null,
+          activeIndex: targetIndex,
+          isAnimating: false,
         });
       }
     });
-  }
+  };
 
-  animateToIndex = (targetIndex: number, animated: boolean, fromIndex?: number) => {
-    this.setState({
+  animateToIndex = (
+    targetIndex: number,
+    animated: boolean,
+    fromIndex?: number
+  ) => {
+    this.setState(
+      {
         transitionTarget: targetIndex,
         swipingToIndex: null,
         isAnimating: true,
-    }, () => {
+      },
+      () => {
         if (!animated || this.props.animationType === 'none') {
-            this.resetAllOffsets();
-            this.getAnimatedIndex().setValue(targetIndex);
-            this.setState({
-                transitionTarget: null,
-                activeIndex: targetIndex,
-                isAnimating: false,
-                departingIndex: null // Clear immediately when not animated
-            }, () => {
-                // Clean up immediately when not animated
-                this.pruneMountedIndices(targetIndex);
-            });
-            return;
+          this.resetAllOffsets();
+          this.getAnimatedIndex().setValue(targetIndex);
+          this.setState(
+            {
+              transitionTarget: null,
+              activeIndex: targetIndex,
+              isAnimating: false,
+              departingIndex: null, // Clear immediately when not animated
+            },
+            () => {
+              // Clean up immediately when not animated
+              this.pruneMountedIndices(targetIndex);
+            }
+          );
+          return;
         }
         this.runAnimation(targetIndex, undefined, fromIndex);
-    });
-  }
+      }
+    );
+  };
 
   public goTo = (targetIndex: number, animated = true) => {
     const childCount = this.props.children.length;
-    if (!Number.isInteger(targetIndex) || targetIndex < 0 || targetIndex >= childCount) {
+    if (
+      !Number.isInteger(targetIndex) ||
+      targetIndex < 0 ||
+      targetIndex >= childCount
+    ) {
       return;
     }
     if (targetIndex !== this.currentIndex) {
-        if (this.animationInstance) this.animationInstance.stop();
-        const prevIndex = this.currentIndex;
-        this.currentIndex = targetIndex;
+      if (this.animationInstance) this.animationInstance.stop();
+      const prevIndex = this.currentIndex;
+      this.currentIndex = targetIndex;
 
-        this.ensureMounted(targetIndex); // Mount destination
-        this.ensureMounted(prevIndex); // Keep departing screen mounted
+      this.ensureMounted(targetIndex); // Mount destination
+      this.ensureMounted(prevIndex); // Keep departing screen mounted
 
-        // Note: goTo should ideally share the jump offset logic with componentDidUpdate
-        // for non-adjacent transitions, but since goTo is typically used as an internal method,
-        // we call animateToIndex directly here.
-        // For full jump handling, prefer changing the index prop externally.
-        this.animateToIndex(targetIndex, animated, prevIndex);
-        this.props.onIndexChange?.(targetIndex);
+      // Note: goTo should ideally share the jump offset logic with componentDidUpdate
+      // for non-adjacent transitions, but since goTo is typically used as an internal method,
+      // we call animateToIndex directly here.
+      // For full jump handling, prefer changing the index prop externally.
+      this.animateToIndex(targetIndex, animated, prevIndex);
+      this.props.onIndexChange?.(targetIndex);
     }
-  }
+  };
 
   getActivityState = (itemIndex: number): 0 | 1 | 2 => {
     // Only activate indices that are explicitly participating in the current interaction (state 1 or 2)
-    const { activeIndex, transitionTarget, swipingToIndex, departingIndex, isAnimating } = this.state;
+    const {
+      activeIndex,
+      transitionTarget,
+      swipingToIndex,
+      departingIndex,
+      isAnimating,
+    } = this.state;
 
     const isSource = itemIndex === activeIndex; // Currently displayed screen
-    const isTarget = transitionTarget !== null && itemIndex === transitionTarget; // Transition target
+    const isTarget =
+      transitionTarget !== null && itemIndex === transitionTarget; // Transition target
     const isSwiping = swipingToIndex !== null && itemIndex === swipingToIndex; // Gesture preview
     const isDeparting = departingIndex !== null && itemIndex === departingIndex; // Departing afterimage
 
@@ -485,11 +529,12 @@ class Transitions extends Component<TransitionsProps, TransitionsState> {
 
     // All others (including intermediate screens) are inactive
     return 0;
-  }
+  };
 
   // --- Render Indices Calculation ---
   getRenderIndices = () => {
-    const { mountedIndices, transitionTarget, swipingToIndex, activeIndex } = this.state;
+    const { mountedIndices, transitionTarget, swipingToIndex, activeIndex } =
+      this.state;
     const { index, children } = this.props;
     const childCount = children.length;
 
@@ -509,9 +554,9 @@ class Transitions extends Component<TransitionsProps, TransitionsState> {
 
     // Validate and sort
     return Array.from(combinedIndices)
-      .filter(i => i >= 0 && i < childCount)
+      .filter((i) => i >= 0 && i < childCount)
       .sort((a, b) => a - b);
-  }
+  };
 
   handleLayout = (e: LayoutChangeEvent) => {
     const { width, height } = e.nativeEvent.layout;
@@ -521,11 +566,14 @@ class Transitions extends Component<TransitionsProps, TransitionsState> {
       ? layoutProps?.height !== undefined
       : layoutProps?.width !== undefined;
 
-    if (!isControlled && (this.state.layout.width !== width || this.state.layout.height !== height)) {
+    if (
+      !isControlled &&
+      (this.state.layout.width !== width || this.state.layout.height !== height)
+    ) {
       this.setState({ layout: { width, height } });
     }
     this.props.onLayout?.(e);
-  }
+  };
 
   render() {
     const {
@@ -554,13 +602,14 @@ class Transitions extends Component<TransitionsProps, TransitionsState> {
       <Container
         onLayout={this.handleLayout}
         {...containerProps}
-        style={[
-            styles.container,
-            style
-        ]}
-        {...(this.props.swipeEnabled !== false ? this.panResponder.panHandlers : undefined)}
+        style={[styles.container, style]}
+        {...(this.props.swipeEnabled !== false
+          ? this.panResponder.panHandlers
+          : undefined)}
       >
-        {renderIndices.filter(i => children[i] != null).map(i => {
+        {renderIndices
+          .filter((i) => children[i] != null)
+          .map((i) => {
             // Priority calculation logic
             // mountedOrderArray: [oldest, ..., newest]
             // Only show up to 2: the most recently activated child and the one before it get high zIndex
@@ -581,27 +630,28 @@ class Transitions extends Component<TransitionsProps, TransitionsState> {
             // Check if this child has never been mounted
             const isUnmounted = !mountedIndices.has(i);
             // If swipeEnabled and never mounted, disable freeze to allow initial render
-            const itemFreeze = (this.props.swipeEnabled !== false && isUnmounted) ? false : freeze;
+            const itemFreeze =
+              this.props.swipeEnabled !== false && isUnmounted ? false : freeze;
 
             return (
-                <AnimatedItem
-                    key={i}
-                    itemIndex={i}
-                    animatedIndex={animatedIndex}
-                    activityState={this.getActivityState(i)}
-                    containerSize={containerSize}
-                    vertical={vertical}
-                    isActive={i === activeIndex}
-                    offset={this.getItemOffset(i)}
-                    animationType={animationType || 'slide'}
-                    priority={priority}
-                    useNativeScreens={useNativeScreens}
-                    freeze={itemFreeze}
-                >
-                    {children[i]!}
-                </AnimatedItem>
+              <AnimatedItem
+                key={i}
+                itemIndex={i}
+                animatedIndex={animatedIndex}
+                activityState={this.getActivityState(i)}
+                containerSize={containerSize}
+                vertical={vertical}
+                isActive={i === activeIndex}
+                offset={this.getItemOffset(i)}
+                animationType={animationType || 'slide'}
+                priority={priority}
+                useNativeScreens={useNativeScreens}
+                freeze={itemFreeze}
+              >
+                {children[i]!}
+              </AnimatedItem>
             );
-        })}
+          })}
       </Container>
     );
   }
