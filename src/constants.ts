@@ -1,4 +1,4 @@
 export const SWIPE_THRESHOLD = 0.2;
 export const VELOCITY_THRESHOLD = 0.5;
 export const CONTINUOUS_PRELOAD_THRESHOLD = 0;
-export const INITIAL_PRELOAD_THRESHOLD = 1;
+export const INITIAL_PRELOAD_THRESHOLD = 0.1;
