@@ -144,7 +144,14 @@ class Transitions extends Component<TransitionsProps, TransitionsState> {
       onPanResponderRelease: (_, gestureState) => {
         const currentIdx = this.currentIndex;
         const containerSize = this.getCurrentContainerSize();
-        if (containerSize === 0) return;
+        if (containerSize === 0) {
+          this.setState({
+            isAnimating: false,
+            swipingToIndex: null,
+            transitionTarget: null,
+          });
+          return;
+        }
 
         const delta = this.props.vertical ? gestureState.dy : gestureState.dx;
         const velocityValue = this.props.vertical ? gestureState.vy : gestureState.vx;
@@ -435,6 +442,10 @@ class Transitions extends Component<TransitionsProps, TransitionsState> {
   }
 
   public goTo = (targetIndex: number, animated = true) => {
+    const childCount = this.props.children.length;
+    if (!Number.isInteger(targetIndex) || targetIndex < 0 || targetIndex >= childCount) {
+      return;
+    }
     if (targetIndex !== this.currentIndex) {
         if (this.animationInstance) this.animationInstance.stop();
         const prevIndex = this.currentIndex;
