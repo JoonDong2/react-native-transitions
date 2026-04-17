@@ -10,7 +10,7 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
-import Transitions from 'react-native-transitions';
+import Transitions from '@joondong2/react-native-transitions';
 
 // ─── Mock Data ──────────────────────────────────────────────────────────────
 

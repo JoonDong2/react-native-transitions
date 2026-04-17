@@ -2285,7 +2285,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@joondong2/react-native-transitions@workspace:.":
+"@joondong2/react-native-transitions@workspace:*, @joondong2/react-native-transitions@workspace:.":
   version: 0.0.0-use.local
   resolution: "@joondong2/react-native-transitions@workspace:."
   dependencies:
@@ -8412,6 +8412,7 @@ __metadata:
   resolution: "react-native-transitions-example@workspace:example"
   dependencies:
     "@expo/metro-runtime": "npm:~6.1.2"
+    "@joondong2/react-native-transitions": "workspace:*"
     expo: "npm:~54.0.33"
     expo-status-bar: "npm:~3.0.9"
     react: "npm:19.1.0"
