@@ -22,6 +22,7 @@ class Transitions extends Component<TransitionsProps, TransitionsState> {
   private itemOffsets: Record<number, Animated.Value> = {};
   private animationInstance: ReturnType<typeof Animated.spring> | null = null;
   private panResponder: PanResponderInstance;
+  private isUnmounted = false;
 
   static defaultProps = {
     transitionType: 'view',
@@ -202,7 +203,28 @@ class Transitions extends Component<TransitionsProps, TransitionsState> {
     return layoutProps?.width ?? layout.width;
   }
 
+  componentWillUnmount() {
+    this.isUnmounted = true;
+    if (this.animationInstance) {
+      this.animationInstance.stop();
+      this.animationInstance = null;
+    }
+  }
+
   componentDidUpdate(prevProps: TransitionsProps) {
+    // Handle external animatedIndex instance swap
+    if (prevProps.animatedIndex !== this.props.animatedIndex) {
+      if (this.animationInstance) {
+        this.animationInstance.stop();
+        this.animationInstance = null;
+      }
+      // If the external prop was removed, reset internal fallback to a fresh value
+      if (!this.props.animatedIndex) {
+        this.internalAnimatedIndex = new Animated.Value(this.currentIndex);
+      }
+      this.getAnimatedIndex().setValue(this.currentIndex);
+    }
+
     const prevIndex = prevProps.index ?? 0;
     const nextIndex = this.props.index ?? 0;
 
@@ -377,7 +399,7 @@ class Transitions extends Component<TransitionsProps, TransitionsState> {
     anim.start(({ finished }) => {
       // [Modification] Only clean up when finished is true
       // Ignore stale target if an external prop change occurred mid-animation
-      if (finished && targetIndex === this.currentIndex) {
+      if (finished && !this.isUnmounted && targetIndex === this.currentIndex) {
         this.resetAllOffsets();
         this.setState({
             transitionTarget: null,
