@@ -11,14 +11,9 @@ function useDelayedState<T>(origin: T, delay: number = 0) {
 
       return;
     }
-
-    const timeout = setTimeout(() => {
+    setTimeout(() => {
       setState(origin);
     }, delay);
-
-    return () => {
-      clearTimeout(timeout);
-    };
   }, [delay, origin]);
 
   return state;
