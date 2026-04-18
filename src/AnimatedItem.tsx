@@ -27,10 +27,7 @@ export const AnimatedItem = memo(
     // Delay the freeze by one frame: freezing too early causes the native
     // view to get out of sync with the JS state before the native side has
     // finished applying the latest activityState.
-    const delayedFreeze = useDelayedState(
-      freeze && activityState === ActivityState.INACTIVE,
-      ONE_FRAME_MS
-    );
+    const delayedActivityState = useDelayedState(activityState, ONE_FRAME_MS);
     const effectiveIndex = useMemo(
       () => Animated.add(itemIndex, offset),
       [itemIndex, offset]
@@ -93,7 +90,11 @@ export const AnimatedItem = memo(
       ? children
       : children({ activityState, priority, diff });
     const frozenContent = (
-      <Freeze freeze={delayedFreeze}>{childContent}</Freeze>
+      <Freeze
+        freeze={freeze && delayedActivityState === ActivityState.INACTIVE}
+      >
+        {childContent}
+      </Freeze>
     );
 
     if (useNativeScreens) {
