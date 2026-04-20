@@ -21,7 +21,7 @@ class Transitions extends Component<TransitionsProps, TransitionsState> {
   private isUnmounted = false;
 
   static defaultProps = {
-    transitionType: 'view',
+    transitionType: 'screens',
     index: 0,
     swipeEnabled: true,
     animationType: 'slide',

@@ -128,7 +128,7 @@ function App() {
 | `children` | `ScreenType[]` | *필수* | 전환할 화면 목록. ReactElement 또는 render function. |
 | `index` | `number` | `0` | 현재 활성 화면의 인덱스. |
 | `onIndexChange` | `(index: number) => void` | - | 스와이프로 인덱스가 변경될 때 호출됩니다. |
-| `transitionType` | `'view' \| 'screens'` | `'view'` | `'screens'`로 설정하면 `react-native-screens`의 `ScreenContainer`를 사용합니다. |
+| `transitionType` | `'view' \| 'screens'` | `'screens'` | `'screens'`로 설정하면 `react-native-screens`의 `ScreenContainer`를 사용합니다. |
 | `animationType` | `'slide' \| 'fade' \| 'fade-slide' \| 'none'` | `'slide'` | 전환 애니메이션 종류. |
 | `swipeEnabled` | `boolean` | `true` | 스와이프 제스처 활성화 여부. |
 | `vertical` | `boolean` | `false` | `true`로 설정하면 세로 방향으로 전환합니다. |

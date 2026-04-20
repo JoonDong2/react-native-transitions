@@ -128,7 +128,7 @@ Passing `animatedIndex` externally allows you to synchronize it with tab indicat
 | `children` | `ScreenType[]` | *required* | Screens to transition between. ReactElement or render function. |
 | `index` | `number` | `0` | Currently active screen index. |
 | `onIndexChange` | `(index: number) => void` | - | Called when the index changes via swipe. |
-| `transitionType` | `'view' \| 'screens'` | `'view'` | Set to `'screens'` to use `ScreenContainer` from `react-native-screens`. |
+| `transitionType` | `'view' \| 'screens'` | `'screens'` | Set to `'screens'` to use `ScreenContainer` from `react-native-screens`. |
 | `animationType` | `'slide' \| 'fade' \| 'fade-slide' \| 'none'` | `'slide'` | Transition animation type. |
 | `swipeEnabled` | `boolean` | `true` | Whether swipe gestures are enabled. |
 | `vertical` | `boolean` | `false` | Set to `true` to transition vertically. |
