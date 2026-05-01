@@ -2,7 +2,7 @@ import { Component } from 'react';
 import { Animated, PanResponder, View } from 'react-native';
 import type { LayoutChangeEvent, PanResponderInstance } from 'react-native';
 import { ScreenContainer } from 'react-native-screens';
-import { AnimatedItem } from './AnimatedItem';
+import { PagerItem } from './PagerItem';
 import {
   SWIPE_THRESHOLD,
   VELOCITY_THRESHOLD,
@@ -10,9 +10,9 @@ import {
   INITIAL_PRELOAD_THRESHOLD,
 } from './constants';
 import { styles } from './styles';
-import type { TransitionsProps, TransitionsState } from './types';
+import type { FastPagerProps, FastPagerState } from './types';
 
-class Transitions extends Component<TransitionsProps, TransitionsState> {
+class FastPager extends Component<FastPagerProps, FastPagerState> {
   private internalAnimatedIndex: Animated.Value;
   private currentIndex: number; // Logical current index (equivalent to useRef in hooks)
   private itemOffsets: Record<number, Animated.Value> = {};
@@ -21,14 +21,14 @@ class Transitions extends Component<TransitionsProps, TransitionsState> {
   private isUnmounted = false;
 
   static defaultProps = {
-    transitionType: 'screens',
+    renderMode: 'native',
     index: 0,
     swipeEnabled: true,
     animationType: 'slide',
     direction: 'horizontal',
   };
 
-  constructor(props: TransitionsProps) {
+  constructor(props: FastPagerProps) {
     super(props);
 
     const initialIndex = props.index ?? 0;
@@ -231,7 +231,7 @@ class Transitions extends Component<TransitionsProps, TransitionsState> {
     }
   }
 
-  componentDidUpdate(prevProps: TransitionsProps) {
+  componentDidUpdate(prevProps: FastPagerProps) {
     // Handle external animatedIndex instance swap
     if (prevProps.animatedIndex !== this.props.animatedIndex) {
       if (this.animationInstance) {
@@ -578,7 +578,7 @@ class Transitions extends Component<TransitionsProps, TransitionsState> {
   render() {
     const {
       children,
-      transitionType: type,
+      renderMode: mode,
       style,
       animationType,
       vertical,
@@ -594,7 +594,7 @@ class Transitions extends Component<TransitionsProps, TransitionsState> {
     const mountedOrderArray = Array.from(mountedIndices);
     const animatedIndex = this.getAnimatedIndex();
 
-    const useNativeScreens = type === 'screens';
+    const useNativeScreens = mode === 'native';
     const Container = useNativeScreens ? ScreenContainer : View;
     const containerProps = useNativeScreens ? { enabled: true } : {};
 
@@ -634,7 +634,7 @@ class Transitions extends Component<TransitionsProps, TransitionsState> {
               this.props.swipeEnabled !== false && isUnmounted ? false : freeze;
 
             return (
-              <AnimatedItem
+              <PagerItem
                 key={i}
                 itemIndex={i}
                 animatedIndex={animatedIndex}
@@ -649,7 +649,7 @@ class Transitions extends Component<TransitionsProps, TransitionsState> {
                 freeze={itemFreeze}
               >
                 {children[i]!}
-              </AnimatedItem>
+              </PagerItem>
             );
           })}
       </Container>
@@ -657,4 +657,4 @@ class Transitions extends Component<TransitionsProps, TransitionsState> {
   }
 }
 
-export default Transitions;
+export default FastPager;

@@ -2,12 +2,12 @@ import { isValidElement, memo, useMemo } from 'react';
 import { Animated } from 'react-native';
 import { Screen } from 'react-native-screens';
 import { Freeze } from 'react-freeze';
-import { ActivityState, type AnimatedItemProps } from './types';
+import { ActivityState, type PagerItemProps } from './types';
 import { styles } from './styles';
 
 const AnimatedScreen = Animated.createAnimatedComponent(Screen);
 
-export const AnimatedItem = memo(
+export const PagerItem = memo(
   ({
     children,
     itemIndex,
@@ -21,7 +21,7 @@ export const AnimatedItem = memo(
     containerSize,
     useNativeScreens = true,
     freeze = true,
-  }: AnimatedItemProps) => {
+  }: PagerItemProps) => {
     const effectiveIndex = useMemo(
       () => Animated.add(itemIndex, offset),
       [itemIndex, offset]

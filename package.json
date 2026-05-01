@@ -1,7 +1,7 @@
 {
-  "name": "@joondong2/react-native-transitions",
+  "name": "react-native-fast-pager",
   "version": "0.1.8",
-  "description": "Swipeable screen transition component for React Native",
+  "description": "High-performance swipe pager for React Native",
   "main": "./lib/module/index.js",
   "types": "./lib/typescript/src/index.d.ts",
   "exports": {
@@ -32,7 +32,7 @@
     "!**/.*"
   ],
   "scripts": {
-    "example": "yarn workspace react-native-transitions-example",
+    "example": "yarn workspace react-native-fast-pager-example",
     "clean": "del-cli lib",
     "prepare": "bob build",
     "typecheck": "tsc",
@@ -45,14 +45,14 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/JoonDong2/react-native-transitions.git"
+    "url": "git+https://github.com/JoonDong2/react-native-fast-pager.git"
   },
   "author": "Joondong <noreply@example.com> (https://github.com/joondong)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/JoonDong2/react-native-transitions/issues"
+    "url": "https://github.com/JoonDong2/react-native-fast-pager/issues"
   },
-  "homepage": "https://github.com/JoonDong2/react-native-transitions#readme",
+  "homepage": "https://github.com/JoonDong2/react-native-fast-pager#readme",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },

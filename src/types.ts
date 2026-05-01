@@ -2,8 +2,8 @@ import type { ReactElement } from 'react';
 import { Animated } from 'react-native';
 import type { LayoutChangeEvent, StyleProp, ViewStyle } from 'react-native';
 
-export type TransitionType = 'view' | 'screens';
 export type AnimationType = 'fade' | 'slide' | 'none' | 'fade-slide';
+export type RenderMode = 'view' | 'native';
 
 export enum ActivityState {
   INACTIVE = 0,
@@ -11,7 +11,7 @@ export enum ActivityState {
   FULL_ACTIVE = 2,
 }
 
-export type ScreenType =
+export type PagerItemType =
   | ((props: {
       activityState: ActivityState;
       priority: number;
@@ -19,9 +19,9 @@ export type ScreenType =
     }) => ReactElement)
   | ReactElement;
 
-export interface TransitionsProps {
-  children: ScreenType[];
-  transitionType?: TransitionType;
+export interface FastPagerProps {
+  children: PagerItemType[];
+  renderMode?: RenderMode;
   layout?: {
     width?: number;
     height?: number;
@@ -40,12 +40,12 @@ export interface TransitionsProps {
   freeze?: boolean;
 }
 
-export interface TransitionsInstance {
+export interface FastPagerInstance {
   animatedIndex: Animated.Value;
   goTo: (index: number, animated?: boolean) => void;
 }
 
-export interface TransitionsState {
+export interface FastPagerState {
   activeIndex: number;
   mountedIndices: Set<number>;
   swipingToIndex: number | null;
@@ -55,8 +55,8 @@ export interface TransitionsState {
   layout: { width: number; height: number };
 }
 
-export interface AnimatedItemProps {
-  children: ScreenType;
+export interface PagerItemProps {
+  children: PagerItemType;
   itemIndex: number;
   animatedIndex: Animated.Value;
   containerSize: number;

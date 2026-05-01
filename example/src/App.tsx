@@ -10,7 +10,7 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
-import Transitions from '@joondong2/react-native-transitions';
+import FastPager from 'react-native-fast-pager';
 
 // ─── Mock Data ──────────────────────────────────────────────────────────────
 
@@ -127,7 +127,7 @@ const STEPS = [
   },
 ];
 
-// ─── Sub-screens for Transitions ────────────────────────────────────────────
+// ─── Sub-pages for FastPager ────────────────────────────────────────────────
 
 function IngredientsScreen({ minHeight }: { minHeight: number }) {
   return (
@@ -230,7 +230,7 @@ function HeaderSection() {
 
 // ─── Main App ───────────────────────────────────────────────────────────────
 
-const ITEMS = ['header', 'tab', 'transitions'] as const;
+const ITEMS = ['header', 'tab', 'pager'] as const;
 
 export default function App() {
   const [tabIndex, setTabIndex] = useState(0);
@@ -238,12 +238,12 @@ export default function App() {
   const { height: screenHeight } = useWindowDimensions();
   const flatlistRef = useRef<FlatList>(null);
 
-  // Approximate content min height so Transitions fills remaining space
+  // Approximate content min height so FastPager fills remaining space
   const contentMinHeight = screenHeight - 48; // tab height
 
   const onIndexChange = useCallback((index: number) => {
     setTabIndex(index);
-    // Scroll to bring the transitions area into view
+    // Scroll to bring the pager area into view
     setTimeout(() => {
       flatlistRef.current?.scrollToIndex({ index: 2, viewOffset: 48 });
     }, 250);
@@ -262,16 +262,16 @@ export default function App() {
               onPress={onIndexChange}
             />
           );
-        case 'transitions':
+        case 'pager':
           return (
-            <Transitions
+            <FastPager
               index={tabIndex}
               onIndexChange={onIndexChange}
               animatedIndex={animatedIndex}
             >
               <IngredientsScreen minHeight={contentMinHeight} />
               <StepsScreen minHeight={contentMinHeight} />
-            </Transitions>
+            </FastPager>
           );
       }
     },

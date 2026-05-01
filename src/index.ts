@@ -1,7 +1,8 @@
-export { default } from './Transitions';
+export { default } from './FastPager';
 export {
   ActivityState,
-  type TransitionType,
+  type RenderMode,
   type AnimationType,
-  type TransitionsInstance,
+  type FastPagerInstance,
+  type FastPagerProps,
 } from './types';

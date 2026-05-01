@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Transitions Example",
-    "slug": "react-native-transitions-example",
+    "name": "Fast Pager Example",
+    "slug": "react-native-fast-pager-example",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -14,7 +14,7 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "transitions.example"
+      "bundleIdentifier": "fastpager.example"
     },
     "android": {
       "adaptiveIcon": {
@@ -22,7 +22,7 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "package": "transitions.example"
+      "package": "fastpager.example"
     },
     "web": {
       "favicon": "./assets/favicon.png"
